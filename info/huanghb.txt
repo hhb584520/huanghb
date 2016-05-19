@@ -1,3 +1,8 @@
-wwid:11628530
-name:huang haibin
+Intel:
+  wwid:11628530
+  name:huang haibin
+
+Microsoft bing:
+  hu.haibin@outlook.com
+  Ceo_710828
 
