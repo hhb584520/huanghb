@@ -1,3 +1,7 @@
+github
+  username: huanghaibin710
+  passwd: ceo710828
+
 Intel:
   wwid:11628530
   name:huang haibin
