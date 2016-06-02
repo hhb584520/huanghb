@@ -1,3 +1,5 @@
+1. account info
+
 github
   username: huanghaibin710
   passwd: ceo710828
@@ -14,5 +16,5 @@ Google:
   hhb584520@gmail.com
   Ceo_710828
 
-
+2. other info
 -----------------------
