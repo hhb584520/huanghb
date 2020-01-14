@@ -1,0 +1,39 @@
+1.CDN(Content Delivery Network)
+2.SPN(Slicing Packet Network)切片分组网络
+   简介：一个承载网的切片技术，由中国移动提出
+   参考文章：
+   https://zhuanlan.zhihu.com/p/70644374
+   https://iot.ofweek.com/2019-10/ART-132200-8120-30414552.html
+3.CRD(Custom Resource Definition)
+   简介：
+      CRD是Kubernetes为提高可扩展性，让开发者去自定义资源（如Deployment，StatefulSet等）的一种方法。
+   CRD仅仅是资源的定义，而Controller可以去监听CRD的CRUD事件来添加自定义业务逻辑。
+   Operator=CRD+Controller。
+   参考文章：
+   https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/
+   
+4. Serverless
+      当然并不一定使用这些云服务，才能称为 Serverless。只要你所有的应用中的一部分服务直接使用的是第三
+   方服务。在这种情况下，系统间的分层可能会变成一个又一个的服务。原本，在今天主流的微服务设计里，每一个
+   领域或者子域都是一个服务。而在 Serverless 应用中，这些领域及子域因为他们的功能，又可能会进一步切分
+   成一个又一个 Serverless 函数。很多人也会说成 FaaS。
+   
+   monolithic application 1-------N Microservice 1-------N Function
+    
+5.OpenNESS（Open Network Edge Services Software）
+   简介：
+      是一个开源的边缘应用程序管理系统，使服务提供商和企业能够在任何网络的边缘上构建、部署和操作自己
+   的边缘应用程序（ME APP），支持通过简易的方式将运行在 Telco/Public Cloud 中的 APP 迁移到边缘。
+      同时，OpenNESS 还是一个边缘网络的服务平台，支持在多云环境中跨越多种类型的网络平台（e.g. NTS、
+   OvS、vPP）以及多种类型的访问技术（Access Technologies，e.g. S1_U、SGi、IP）。让用户能够轻松的
+   编排和管理运行在边缘上的应用程序，并为客户端（UE）和边缘应用程序提供端到端的网络连接服务。
+   参考文章：
+      https://blog.csdn.net/jmilk/article/details/102603127
+      
+6.ACL(Access control list)
+  访问控制列表(ACL)是一个表，它告诉计算机操作系统哪个用户有权访问特定的系统对象，如文件目录或单个文件。
+每个对象都有一个安全属性来标识其访问控制列表。该列表对每个具有访问权限的系统用户都有一个条目。最常见
+的权限包括读取文件(或目录中的所有文件)、写入文件或执行文件(如果是可执行文件或程序)的能力。
+Microsoft Windows NT/2000、Novell的NetWare、Digital的OpenVMS和基于unix的系统都是使用访问控制列
+表的操作系统。每个操作系统实现该列表的方式不同。
+用在网络领域就是控制机器之间网络网络流向，即接受哪些机器的流量，拒绝哪些机器的流量。
