@@ -1,0 +1,7 @@
+# docker build -t http-go
+# docker run -p 8000:8000 http-go:latest
+
+# stop
+# docker ps
+# docker stop <container_id>
+

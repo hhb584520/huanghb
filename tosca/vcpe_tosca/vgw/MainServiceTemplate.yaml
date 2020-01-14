@@ -1,0 +1,353 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+metadata:
+  template_name: vCPE_vgw
+  template_version: "1.0"
+  template_author: onap
+description: vCPE_vgw
+
+imports:
+  - onap_dm.yaml
+
+topology_template:
+  inputs:
+    vcpe_image_name:
+      type: string
+      description: image name for vcpe in openstack glance
+      default: ubuntu_16.04
+    public_net_id:
+      type: string
+      description: public network id used during onap installation
+      default: public_network
+    onap_private_net_id:
+      type: string
+      description: onap OAM network id
+      default: onap_public_network
+    onap_private_net_cidr:
+      type: string
+      description: oanp OAM network cidr
+      default: 10.0.0.0/16
+    mux_gw_private_net_id:
+      type: string
+      description: Private network that connects vGMUX to vGWs 
+      default: zdfw1muxgw01_private
+    mux_gw_private_net_cidr:
+      type: string
+      description: he CIDR of the vGMUX private network
+      default: 10.5.0.0/24
+    cpe_public_net_id:
+      type: string
+      description: cpe public net name
+      default: zdfw1cpe01_public
+    cpe_public_net_cidr:
+      type: string
+      description: cpe public net cidr
+      default: 10.2.0.0/24
+    vgw_private_ip_0:
+      type: string
+      description: Private IP address that is assigned to the vGW to communicate with vGMUX
+      default: 10.5.0.21
+    vgw_private_ip_1:
+      type: string
+      description: Private IP address that is assigned to the vGW to communicate with ONAP components
+      default: 10.0.101.30
+    vgw_private_ip_2:
+      type: string
+      description: Private IP address that is assigned to the vGW to communicate with vCPE public network
+      default: 10.2.0.2
+    vgw_name_0:
+      type: string
+      description: Name of the vGW
+      default: zdcpe1cpe01gw01
+    dcae_collector_ip:
+      type: string
+      description: dcae collector ip
+      default: 10.0.4.102
+    dcae_collector_port:
+      type: integer
+      description: dcae collector port
+      default: 8080
+    pub_key:
+      type: string
+      description: ssh public key
+      default: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGx6SKrAuCz1V8KGevZueksLdWoPWJP6z3r29Z7TmPVEOjM+7PIPeSs2BVRx3rnHZBAlasMrZ+fJBS25ts9vfC+ItezQah/hr9vrkmwxCR54Lb84poW+sToPeF6i5eZY7W+jWJfLaFSFx9d2vp4zes/fOlT3NvYCXbn/3QdryQoGl7VFI8oemZypVcikZXElJeeKgAVdSwnrzuqtO/tmbXcAeSbYvVjki8ywYcsWMVMYWUWhh+1BAB6kXnTsIWqzrq0Pfvy+81WDwtiqsqmd93HY8hE0scBrXFBZzQS/AYfIFBlEuFNdLczchntjbZ0n7dmDXk8zHtCZYNk7kwb8k/ lulianhao@llu-nuc1
+    repo_url_blob:
+      type: string
+      description: url of the repo hosting demo package 
+      default: https://nexus.onap.org/content/sites/raw
+    repo_url_artifacts:
+      type: string
+      description: url of the repo hosting demo package artifacts
+      default: https://nexus.onap.org/content/groups/staging
+    demo_artifacts_version:
+      type: string
+      description: artifacts version used in demo vnfs
+      default: 1.2.0
+    install_script_version:
+      type: string
+      description: install script version number
+      default: 1.2.0-SNAPSHOT
+    cloud_env:
+      type: string
+      description: cloud environment(openstack or rackspace)
+      default: openstack
+    vpp_source_repo_url:
+      type: string
+      description: URL for VPP source codes
+      default: https://gerrit.fd.io/r/vpp
+    vpp_source_repo_branch:
+      type: string
+      description: Git Branch for the VPP source codes
+      default: stable/1704
+    hc2vpp_source_repo_url:
+      type: string
+      description: URL for Honeycomb source codes
+      default: https://gerrit.fd.io/r/hc2vpp
+    hc2vpp_source_repo_branch:
+      type: string
+      description: Git Branch for the Honeycomb source codes
+      default: stable/1704
+    mux_ip_addr:
+      type: string
+      description: IP address of vGMUX
+      default: 10.5.0.20
+    vg_vgmux_tunnel_vni:
+      type: integer
+      description: vni value of vG-vGMUX vxlan tunnel
+      default: 100
+    vnf_id:
+      type: string
+      description: The VNF ID is provided by ONAP
+      default: vCPE_Infrastructure_GW_demo_app
+    vf_module_id:
+      type: string
+      description: The vCPE Module ID is provided by ONAP
+      default: vCPE_Customer_GW
+
+  node_templates:
+    #onap public net
+    VL_public:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type:
+          layer_protocol: ipv4
+        vl_profile:
+          max_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          min_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          networkName: { get_input: public_net_id }
+
+    #onap oam net
+    VL_onap_private:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type:
+          layer_protocol: ipv4
+        vl_profile:
+          max_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          min_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          networkName: { get_input: onap_private_net_id }
+          cidr: { get_input: onap_private_net_cidr }
+
+    #Private network that connects vGMUX to vGWs
+    VL_mux_gw_private_net:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type:
+          layer_protocol: ipv4
+        vl_profile:
+          max_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          min_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          networkName: { get_input: mux_gw_private_net_id}
+          cidr: { get_input: mux_gw_private_net_cidr }
+          dhcpEnabled: false
+ 
+    #cpe public network
+    VL_cpe_public:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type:
+          layer_protocol: ipv4
+        vl_profile:
+          max_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          min_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          networkName: { get_input: cpe_public_net_id}
+          cidr: { get_input: cpe_public_net_cidr }
+          dhcpEnabled: false
+
+    # vgw related
+    Cp_vgw_public:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+      requirements:
+        - virtual_binding: 
+            node: VDU_vgw_0
+        - virtual_link: 
+            node: VL_public
+
+    Cp_vgw_onap_private:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vgw_private_ip_1 }
+      requirements:
+        - virtual_binding: 
+            node: VDU_vgw_0
+        - virtual_link: 
+            node: VL_onap_private
+
+    Cp_vgw_mux_gw_private_net:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vgw_private_ip_0 }
+        virtual_network_interface_requirements:
+          - name: dpdk support
+            support_mandatory: true
+            #TODO HPA
+            network_interface_requirements:
+              #dataProcessingAccelerationLibrary: dpdk_2.2
+              interfaceType: virtio
+      requirements:
+        - virtual_binding: 
+            node: VDU_vgw_0
+        - virtual_link: VL_mux_gw_private_net
+
+    Cp_vgw_cpe_public:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vgw_private_ip_2 }
+      requirements:
+        - virtual_binding: 
+           node: VDU_vgw_0
+        - virtual_link: 
+           node: VL_cpe_public
+
+    VirtualStorage_root_all:
+      # this indicate the VDU root storage size 
+      type: tosca.nodes.nfv.Vdu.VirtualStorage
+      properties:
+        type_of_storage: root
+        size_of_storage: 40 GB
+
+    VDU_vgw_0:
+      type: tosca.nodes.nfv.Vdu.Compute
+      properties:
+        name: { get_input: vgw_name_0 }
+        description: vgw
+        configurable_properties: 
+          additional_vnfc_configurable_properties: {}
+        vdu_profile:
+          min_number_of_instances: 1
+          max_number_of_instances: 1
+          watchdog: none
+#        inject_files:
+#          source_path: ../Artifacts/Deployment/authorized_keys #SSH authorized_keys
+#          dest_path: /home/ubuntu/.ssh/authorized_keys
+        meta_data:
+          vnf_id: { get_input: vnf_id }
+          vf_module_id: { get_input: vf_module_id }
+        #user_data: { concat: ["#!/bin/bash\n",
+        #                      "mkdir /opt/config\n",
+        #                      "echo \"", {get_input: pub_key}, "\" > /home/ubuntu/.ssh/authorized_keys\n",
+        #                      "echo \"", {get_input: vgw_private_ip_1}, "\" > /opt/config/oam_ipaddr.txt\n",
+        #                      "echo \"", {get_input: onap_private_net_cidr}, "\" > /opt/config/oam_cidr.txt\n",
+        #                      "echo \"", {get_input: cpe_public_net_cidr}, "\" > /opt/config/cpe_public_net_cidr.txt\n",
+        #                      "echo \"", {get_input: vgw_private_ip_0}, "\" > /opt/config/mux_gw_private_net_ipaddr.txt\n",
+        #                      "echo \"", {get_input: mux_gw_private_net_cidr}, "\" > /opt/config/mux_gw_private_net_cidr.txt\n",
+        #                      "echo \"", {get_input: repo_url_blob}, "\" > /opt/config/repo_url_blob.txt\n",
+        #                      "echo \"", {get_input: repo_url_artifacts}, "\" > /opt/config/repo_url_artifacts.txt\n",
+        #                      "echo \"", {get_input: demo_artifacts_version}, "\" > /opt/config/demo_artifacts_version.txt\n",
+        #                      "echo \"", {get_input: install_script_version}, "\" > /opt/config/install_script_version.txt\n",
+        #                      "echo \"", {get_input: cloud_env}, "\" > /opt/config/cloud_env.txt\n",
+        #                      "echo \"", {get_input: vpp_source_repo_url}, "\" > /opt/config/vpp_source_repo_url.txt\n",
+        #                      "echo \"", {get_input: vpp_source_repo_branch}, "\" > /opt/config/vpp_source_repo_branch.txt\n",
+        #                      "echo \"", {get_input: hc2vpp_source_repo_url}, "\" > /opt/config/hc2vpp_source_repo_url.txt\n",
+        #                      "echo \"", {get_input: hc2vpp_source_repo_branch}, "\" > /opt/config/hc2vpp_source_repo_branch.txt\n",
+        #                      "echo \"", {get_input: mux_ip_addr}, "\" > /opt/config/mux_ip_addr.txt\n",
+        #                      "echo \"", {get_input: vg_vgmux_tunnel_vni}, "\" > /opt/config/vg_vgmux_tunnel_vni.txt\n",
+        #                      "curl -k ", {get_input: repo_url_blob}, "/org.onap.demo/vnfs/vcpe/", {get_input: install_script_version}, "/v_gw_install.sh -o /opt/v_gw_install.sh\n",
+        #                      "cd /opt\n",
+        #                      "chmod +x v_gw_install.sh\n",
+        #                      "./v_gw_install.sh\n",
+        #                     ]
+        #           }
+        #user_data: { "#!/bin/bash\n
+        #             mkdir /opt/config\n
+        #             echo \"hhb\" > /home/ubuntu/.ssh/authorized_keys\n" }
+        #user_data: "mkdir /opt/config  cd /opt  ./v_gw_install.sh"
+        user_data: "vgw_base_ubuntu_1604% 
+                    mkdir /opt/config%
+                    cd /opt%
+                    echo openstack > /opt/config/cloud_env.txt %
+                    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGx6SKrAuCz1V8KGevZueksLdWoPWJP6z3r29Z7TmPVEOjM+7PIPeSs2BVRx3rnHZBAlasMrZ+fJBS25ts9vfC+ItezQah/hr9vrkmwxCR54Lb84poW+sToPeF6i5eZY7W+jWJfLaFSFx9d2vp4zes/fOlT3NvYCXbn/3QdryQoGl7VFI8oemZypVcikZXElJeeKgAVdSwnrzuqtO/tmbXcAeSbYvVjki8ywYcsWMVMYWUWhh+1BAB6kXnTsIWqzrq0Pfvy+81WDwtiqsqmd93HY8hE0scBrXFBZzQS/AYfIFBlEuFNdLczchntjbZ0n7dmDXk8zHtCZYNk7kwb8k/ lulianhao@llu-nuc1"
+      capabilities:
+        virtual_compute:
+          properties:
+            #TODO add local disk size
+            virtual_memory:
+              virtual_mem_size: 4096 MB
+              #TODO HPA
+              vdu_memory_requirements:
+                memoryPageSize: 2 MB
+                numberOfPages: "1024"
+            virtual_cpu:
+              num_virtual_cpu: 2
+              cpu_architecture: generic
+      requirements:
+        - virtual_storage: VirtualStorage_root_all
+      #artifacts:
+      #  - sw_image: #TODO need to put glance image name here
+      #      file: ../Artifacts/Deployment/vgw_base_ubuntu_1604
+      #      type: tosca.artifacts.nfv.SwImage

@@ -1,0 +1,368 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+metadata:
+  template_name: vCPE_vgmux
+  template_version: "1.0"
+  template_author: onap
+description: vCPE_vgmux
+
+imports:
+  - onap_dm.yaml
+
+topology_template:
+  inputs:
+    vcpe_image_name:
+      type: string
+      description: image name for vcpe in openstack glance
+      default: ubuntu_16.04
+    public_net_id:
+      type: string
+      description: public network id used during onap installation
+      default: public_network
+    onap_private_net_id:
+      type: string
+      description: onap OAM network id
+      default: onap_public_network
+    onap_private_net_cidr:
+      type: string
+      description: oanp OAM network cidr
+      default: 10.0.0.0/16
+    bng_gmux_private_net_id:
+      type: string
+      description: Private network that connects vBNG to vGMUX
+      default: zdfw1bngmux01_private
+    bng_gmux_private_net_cidr:
+      type: string
+      description: The CIDR of the vBNG-vGMUX private network
+      default: 10.1.0.0/24
+    mux_gw_private_net_id:
+      type: string
+      description: Private network that connects vGMUX to vGWs
+      default: zdfw1muxgw01_private
+    mux_gw_private_net_cidr:
+      type: string
+      description: The CIDR of the vGMUX private network
+      default: 10.5.0.0/24
+    brgemu_bng_private_net_cidr:
+      type: string
+      description: The CIDR of the vBRG-vBNG private network
+      default: 10.3.0.0/24
+    vgmux_private_ip_0:
+      type: string
+      description: Private IP address that is assigned to the vGMUX to communicate with the vBNG
+      default: 10.1.0.20
+    vgmux_private_ip_1:
+      type: string
+      description: Private IP address that is assigned to the vGMUX to communicate with ONAP components
+      default: 10.0.101.20
+    vgmux_private_ip_2:
+      type: string
+      description: Private IP address that is assigned to the vGMUX to communicate with vGWs
+      default: 10.5.0.20
+    vgmux_name_0:
+      type: string
+      description: Name of the vGMUX
+      default: zdcpe1cpe01mux01
+    vnf_id:
+      type: string
+      description: The VNF ID is provided by ONAP
+      default: vCPE_Infrastructure_vGMUX_demo_app
+    vf_module_id:
+      type: string
+      description: The vCPE Module ID is provided by ONAP
+      default: vCPE_Intrastructure_Metro_vGMUX
+    bng_gmux_private_ip:
+      type: string
+      description: Private IP address that is assigned to the vBNG to communicate with the vGMUX
+      default: 10.1.0.10
+    dcae_collector_ip:
+      type: string
+      description: dcae collector ip
+      default: 10.0.4.102
+    dcae_collector_port:
+      type: integer
+      description: dcae collector port
+      default: 8080
+    pub_key:
+      type: string
+      description: ssh public key
+      default: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGx6SKrAuCz1V8KGevZueksLdWoPWJP6z3r29Z7TmPVEOjM+7PIPeSs2BVRx3rnHZBAlasMrZ+fJBS25ts9vfC+ItezQah/hr9vrkmwxCR54Lb84poW+sToPeF6i5eZY7W+jWJfLaFSFx9d2vp4zes/fOlT3NvYCXbn/3QdryQoGl7VFI8oemZypVcikZXElJeeKgAVdSwnrzuqtO/tmbXcAeSbYvVjki8ywYcsWMVMYWUWhh+1BAB6kXnTsIWqzrq0Pfvy+81WDwtiqsqmd93HY8hE0scBrXFBZzQS/AYfIFBlEuFNdLczchntjbZ0n7dmDXk8zHtCZYNk7kwb8k/ lulianhao@llu-nuc1
+    repo_url_blob:
+      type: string
+      description: url of the repo hosting demo package 
+      default: https://nexus.onap.org/content/sites/raw
+    repo_url_artifacts:
+      type: string
+      description: url of the repo hosting demo package artifacts
+      default: https://nexus.onap.org/content/groups/staging
+    install_script_version:
+      type: string
+      description: install script version number
+      default: 1.2.0-SNAPSHOT
+    demo_artifacts_version:
+      type: string
+      description: artifacts version used in demo vnfs
+      default: 1.2.0
+    cloud_env:
+      type: string
+      description: cloud environment(openstack or rackspace)
+      default: openstack
+    vpp_source_repo_url:
+      type: string
+      description: URL for VPP source codes
+      default: https://gerrit.fd.io/r/vpp
+    vpp_source_repo_branch:
+      type: string
+      description: Git Branch for the VPP source codes
+      default: stable/1704
+    hc2vpp_source_repo_url:
+      type: string
+      description: URL for Honeycomb source codes
+      default: https://gerrit.fd.io/r/hc2vpp
+    hc2vpp_source_repo_branch:
+      type: string
+      description: Git Branch for the Honeycomb source codes
+      default: stable/1704
+    vpp_patch_url:
+      type: string
+      description: URL for VPP patch for vG-MUX
+      default: https://git.onap.org/demo/plain/vnfs/vCPE/vpp-ves-agent-for-vgmux/src/patches/Vpp-Add-VES-agent-for-vG-MUX.patch
+    hc2vpp_patch_url:
+      type: string
+      description: URL for Honeycomb patch for vG-MUX
+      default: https://git.onap.org/demo/plain/vnfs/vCPE/vpp-ves-agent-for-vgmux/src/patches/Hc2vpp-Add-VES-agent-for-vG-MUX.patch
+    libevel_patch_url:
+      type: string
+      description: URL for libevel patch for vG-MUX
+      default: https://git.onap.org/demo/plain/vnfs/vCPE/vpp-ves-agent-for-vgmux/src/patches/vCPE-vG-MUX-libevel-fixup.patch
+
+  node_templates:
+    #onap public net
+    VL_public:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type:
+          layer_protocol: ipv4
+        vl_profile:
+          max_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          min_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          networkName: { get_input: public_net_id }
+
+    #onap oam net
+    VL_onap_private:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type:
+          layer_protocol: ipv4
+        vl_profile:
+          max_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          min_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          networkName: { get_input: onap_private_net_id }
+          cidr: { get_input: onap_private_net_cidr }
+
+    #Private network that connects vBNG to vGMUX
+    VL_bng_gmux_private_net:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type:
+          layer_protocol: ipv4
+        vl_profile:
+          max_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          min_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          networkName: { get_input: bng_gmux_private_net_id}
+          cidr: { get_input: bng_gmux_private_net_cidr }
+          dhcpEnabled: false
+ 
+    #Private network that connects vGMUX to vGWs
+    VL_mux_gw_private_net:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type:
+          layer_protocol: ipv4
+        vl_profile:
+          max_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          min_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          networkName: { get_input: mux_gw_private_net_id}
+          cidr: { get_input: mux_gw_private_net_cidr }
+          dhcpEnabled: false
+
+    # vgmux related
+    Cp_vgmux_public:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+      requirements:
+        - virtual_binding:
+            node: VDU_vgmux_0
+        - virtual_link:
+            node: VL_public
+
+    Cp_vgmux_onap_private:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vgmux_private_ip_1 }
+      requirements:
+        - virtual_binding:
+            node: VDU_vgmux_0
+        - virtual_link:
+            node: VL_onap_private
+
+    Cp_vgmux_bng_gmux_private_net:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vgmux_private_ip_0 }
+        virtual_network_interface_requirements:
+          - name: dpdk support
+            support_mandatory: true
+            #TODO HPA
+            network_interface_requirements:
+              #dataProcessingAccelerationLibrary: dpdk_2.2
+              interfaceType: virtio
+      requirements:
+        - virtual_binding:
+            node: VDU_vgmux_0
+        - virtual_link:
+            node: VL_bng_gmux_private_net
+
+    Cp_vgmux_mux_gw_private_net:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vgmux_private_ip_2 }
+        virtual_network_interface_requirements:
+          - name: dpdk support
+            support_mandatory: true
+            #TODO HPA
+            network_interface_requirements:
+              #dataProcessingAccelerationLibrary: dpdk_2.2
+              interfaceType: virtio
+      requirements:
+        - virtual_binding:
+            node: VDU_vgmux_0
+        - virtual_link:
+            node: VL_mux_gw_private_net
+
+    VirtualStorage_root_all:
+      # this indicate the VDU root storage size 
+      type: tosca.nodes.nfv.Vdu.VirtualStorage
+      properties:
+        type_of_storage: root
+        size_of_storage: 40 GB
+
+    VDU_vgmux_0:
+      type: tosca.nodes.nfv.Vdu.Compute
+      properties:
+        name: { get_input: vgmux_name_0 }
+        description: vgmux
+        configurable_properties: 
+          additional_vnfc_configurable_properties: {}
+        vdu_profile:
+          min_number_of_instances: 1
+          max_number_of_instances: 1
+          watchdog: none
+        inject_files:
+          source_path: ../Artifacts/keys/authorized_keys #SSH authorized_keys
+          dest_path: /home/ubuntu/.ssh/authorized_keys
+        meta_data:
+          vnf_id: { get_input: vnf_id }
+          vf_module_id: { get_input: vf_module_id }
+        user_data: { concat: ["#!/bin/bash\n",
+                              "mkdir /opt/config\n",
+                              "echo \"", {get_input: vgmux_private_ip_0}, "\" > /opt/config/mux_to_bng_net_ipaddr.txt\n",
+                              "echo \"", {get_input: vgmux_private_ip_1}, "\" > /opt/config/oam_ipaddr.txt\n",
+                              "echo \"", {get_input: vgmux_private_ip_2}, "\" > /opt/config/mux_gw_net_ipaddr.txt\n",
+                              "echo \"", {get_input: bng_gmux_private_ip}, "\" > /opt/config/bng_to_mux_net_ipaddr.txt\n",
+                              "echo \"", {get_input: bng_gmux_private_net_cidr}, "\" > /opt/config/bng_mux_net_cidr.txt\n",
+                              "echo \"", {get_input: onap_private_net_cidr}, "\" > /opt/config/oam_cidr.txt\n",
+                              "echo \"", {get_input: mux_gw_private_net_cidr}, "\" > /opt/config/mux_gw_net_cidr.txt\n",
+                              "echo \"", {get_input: brgemu_bng_private_net_cidr}, "\" > /opt/config/brg_bng_net_cidr.txt\n",
+                              "echo \"", {get_input: repo_url_blob}, "\" > /opt/config/repo_url_blob.txt\n",
+                              "echo \"", {get_input: repo_url_artifacts}, "\" > /opt/config/repo_url_artifacts.txt\n",
+                              "echo \"", {get_input: demo_artifacts_version}, "\" > /opt/config/demo_artifacts_version.txt\n",
+                              "echo \"", {get_input: install_script_version}, "\" > /opt/config/install_script_version.txt\n",
+                              "echo \"", {get_input: cloud_env}, "\" > /opt/config/cloud_env.txt\n",
+                              "echo \"", {get_input: vpp_source_repo_url}, "\" > /opt/config/vpp_source_repo_url.txt\n",
+                              "echo \"", {get_input: vpp_source_repo_branch}, "\" > /opt/config/vpp_source_repo_branch.txt\n",
+                              "echo \"", {get_input: vpp_patch_url}, "\" > /opt/config/vpp_patch_url.txt\n",
+                              "echo \"", {get_input: hc2vpp_source_repo_url}, "\" > /opt/config/hc2vpp_source_repo_url.txt\n",
+                              "echo \"", {get_input: hc2vpp_source_repo_branch}, "\" > /opt/config/hc2vpp_source_repo_branch.txt\n",
+                              "echo \"", {get_input: hc2vpp_patch_url}, "\" > /opt/config/hc2vpp_patch_url.txt\n",
+                              "echo \"", {get_input: libevel_patch_url}, "\" > /opt/config/libevel_patch_url.txt\n",
+                              "curl -k ", {get_input: repo_url_blob}, "/org.onap.demo/vnfs/vcpe/", {get_input: install_script_version}, "/v_gmux_install.sh -o /opt/v_gmux_install.sh\n",
+                              "cd /opt\n",
+                              "chmod +x v_gmux_install.sh\n",
+                              "./v_gmux_install.sh\n",
+                             ]
+                   }
+      capabilities:
+        virtual_compute:
+          properties:
+            virtual_memory:
+              virtual_mem_size: 4096 MB
+              #TODO HPA
+              vdu_memory_requirements:
+                memoryPageSize: 2 MB
+                numberOfPages: "1024"
+            virtual_cpu:
+              num_virtual_cpu: 2
+              cpu_architecture: generic
+      requirements:
+        - virtual_storage: VirtualStorage_root_all
+      artifacts:
+        sw_image: #TODO need to put glance image name here
+          #file: { get_input: vcpe_image_name }
+          file: ../Artifacts/images/vgmux_base_ubuntu_1604
+          type: tosca.artifacts.nfv.SwImage
+

@@ -1,0 +1,51 @@
+1. 容器基本概念
+
+独立的文件系统 - chroot
+资源视图隔离 - namespace
+控制资源使用率 - cgroup
+
+容器，是一个视图隔离、资源可限制、独立文件系统的进程集合。
+
+2. 镜像
+
+运行容器所需要的所有文件集合即为容器镜像。
+构建步骤所产生文件系统的变化 - changeset
+- 提高分发效率
+- 减少磁盘压力
+
+3. 镜像的制作
+见 docker
+
+4. 容器运行时的生命周期
+单进程模型
+- init 进程生命周期 = 容器生命周期
+-  运行期间可运行 exec 执行运维操作
+
+数据持久化
+- 独立于容器的生命周期
+- 数据卷 - docker volume vs bind
+
+# bind host dir into container
+$ docker run -v /tmp:/tmp busybox:1.25 sh -c "date > /tmp/demo.log"
+
+# check result
+$ cat /tmp/demo.log
+
+# let it handled by docker container engine
+$ docker create volume demo
+
+# demo is volume name
+$ docker run -v demo:/rmp busybox:1.25 sh -c "date > /tmp/demo.log"
+
+# check result 
+$ docker run -v demo:/rmp busybox:1.25 sh -c "cat /tmp/demo.log"
+
+5. moby容器引擎架构
+
+containerd
+- 容器运行时管理引擎，独立于 moby daemon
+- containerd-shim 管理容器生命周期，可被 containerd 动态接管。
+
+容器运行时
+- 容器虚拟化技术方案
+- runC kata gVisor

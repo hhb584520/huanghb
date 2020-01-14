@@ -1,0 +1,19 @@
+# kubectl create configmap special-config --from-literal=special.how=very
+#      command: [ "/bin/sh", "-c", "env" ]
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: cm-cmd-test
+spec: 
+  containers:
+  - name: test-container
+    image: k8s.gcr.io/busybox
+    command: [ "/bin/sh", "-c", "ls /etc/config && cat /etc/config/special.how" ]
+    volumeMounts:
+    - name: config-volume
+      mountPath: /etc/config
+  volumes:
+  - name: config-volume
+    configMap:
+      name: special-config
+  restartPolicy: Never

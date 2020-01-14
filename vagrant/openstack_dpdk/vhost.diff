@@ -1,0 +1,10 @@
+diff --git a/lib/neutron_plugins/openvswitch_agent b/lib/neutron_plugins/openvswitch_agent
+index 76a1a4f..dfb6d9f 100644
+--- a/lib/neutron_plugins/openvswitch_agent
++++ b/lib/neutron_plugins/openvswitch_agent
+@@ -120,6 +120,7 @@ function neutron_plugin_configure_plugin_agent {
+     fi
+     iniset /$Q_PLUGIN_CONF_FILE agent tunnel_types $Q_TUNNEL_TYPES
+     iniset /$Q_PLUGIN_CONF_FILE ovs datapath_type $OVS_DATAPATH_TYPE
++    iniset /$Q_PLUGIN_CONF_FILE ovs vhostuser_socket_dir /var/lib/libvirt/qemu
+ }

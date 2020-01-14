@@ -1,0 +1,6 @@
+#for -p understand
+
+# right to convert
+2to3 -f all -p example_p_1.py
+# get error because `print "a"` is not function
+2to3 -f all -p example_p_1.py

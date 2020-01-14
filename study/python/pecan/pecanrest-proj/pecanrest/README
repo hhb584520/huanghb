@@ -1,0 +1,33 @@
+https://gtcsq.readthedocs.io/en/latest/py_doc/pecan_note.html
+
+# Create new pecan project
+mkdir pecanrest-proj
+cd pecanrest-proj
+
+pip install pecan
+pecan create pecanrest
+cd pecanrest
+python setup.py develop
+
+# Start pecan project test, you also can change port by editing config.py
+pecan serve config.py
+
+# you can access it
+127.0.0.1:8080
+
+# tree controllers
+controllers/
++-- api
+¦   +-- api.py
+¦   +-- api.pyc
+¦   +-- __init__.py
+¦   +-- __init__.pyc
+¦   +-- order.py
+¦   +-- order.pyc
++-- __init__.py
++-- __init__.pyc
++-- root.py
++-- root.pyc
++-- v1.py
++-- v1.pyc
+

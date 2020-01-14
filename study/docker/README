@@ -1,0 +1,40 @@
+# kubernets priciple: https://blog.heptio.com/core-kubernetes-jazz-improv-over-orchestration-a7903ea92ca
+# https://mp.weixin.qq.com/s/89DR24bnkJvOEWkoS5yt4A
+# https://yeasy.gitbooks.io/docker_practice/introduction/
+docker container ps
+docker container ls --all
+docker image ls
+docker container rm <container-id>
+
+# create container image
+docker build . -t app:v1
+
+# run contianer
+docker run [-d] --name demo busybox:1.25 top
+
+# push contianer
+docker push app:v1
+
+# download contianer
+docker pull busybox:1.25
+
+# see local images
+docker images
+
+# mount host directory to container
+docker run -it -v /root/onap/openstack/pike/vagrant/test/tsth:/tst --name volume ubuntu:18.04 bash
+
+# share directory between
+https://stackoverflow.com/questions/25311613/docker-mounting-volumes-on-host
+
+FROM ubuntu:18.04
+RUN mkdir /myvol  
+RUN echo "hello world" > /myvol/greeting  
+VOLUME /myvol
+
+ $ docker build -t testing_volume .
+ $ docker run -it <image-id of above image> bash      // container1
+ $ docker run -it --volumes-from <id-of-above-container> ubuntu:18.04 bash //container2
+ $ echo "tst" >> /myvol/greeting
+ $ docker exec -ti <container-id1>
+ $ cat /myvol/greeting

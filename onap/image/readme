@@ -1,0 +1,7 @@
+sudo docker load -i filename
+wget http://duanshuaixing-kubernetes.bj.bcebos.com/images/gcr.io_google_samples_k8szk:v3.tar
+wget http://duanshuaixing-kubernetes.bj.bcebos.com/images/gcr.io_google-samples_xtrabackup_1.0.tar
+
+kubectl -n onap describe statefulset | grep Image > image_fuleset.sh
+kubectl -n onap describe deployment | grep Image > image.sh
+

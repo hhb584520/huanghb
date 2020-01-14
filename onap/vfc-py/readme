@@ -1,0 +1,11 @@
+# step1: create flavor  
+# step2: register VIM
+# step3: upload image
+# step4: modify VNF
+# step5: modify ns
+# step6: insert policy
+# step7: onboard vnf
+# step8: onboard ns
+# step9: create ns
+# step10: register vnfm
+step11: instantiate ns

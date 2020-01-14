@@ -1,0 +1,33 @@
+$num_workers=2
+
+Vagrant.require_version ">= 1.8.6"
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "generic/ubuntu1804"
+  config.vm.provider :libvirt do |libvirt|
+    libvirt.memory = 4096
+    libvirt.cpus = 4
+  end
+
+  config.vm.synced_folder ".", "/vagrant"
+  config.vm.provision "shell", path: "host_setup.sh", privileged: false
+
+  config.vm.define "http" do |config|
+    config.vm.hostname = "http"
+    config.vm.provision "shell", path: "http_setup.sh", privileged: false
+    config.vm.network :private_network, ip: "192.168.1.10"
+  end
+
+  config.vm.define "kud" do |config|
+    config.vm.hostname = "kud"
+    config.vm.provision "shell", path: "kud_setup.sh", privileged: false
+    config.vm.network :private_network, ip: "192.168.1.20"
+  end
+
+  config.vm.define "compute" do |config|
+    config.vm.hostname = "compute"
+    config.vm.provision "shell", path: "compute_setup.sh", privileged: false
+    config.vm.network :private_network, ip: "192.168.1.30"
+  end
+
+end

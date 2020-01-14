@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: disk-pvc
+  namespace: simple
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storages: 30Gi
+  storageClassName: csi-disk

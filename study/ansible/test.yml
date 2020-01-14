@@ -1,0 +1,21 @@
+---
+- hosts: all
+  gather_facts: false
+  become: no
+  tasks:
+    - name: "Check ansible version >=2.5.0"
+      assert:
+        msg: "Ansible must be v2.5.0 or higher"
+        that:
+          - ansible_version.string is version("2.5.0", ">=")
+      tags:
+        - check
+  vars:
+    ansible_connection: local
+
+- hosts: all
+  tasks:
+  - name: Ansible create file if it doesn't exist example
+    file:
+      path: "/tmp/haibin.tst"
+      state: touch

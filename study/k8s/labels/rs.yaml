@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata: 
+    annotations:
+    labels: 
+        env: prod
+    name: nginx-replicasets
+    namespace: default
+spec: 
+    replicas: 2
+    selector: 
+        matchLabels:
+            env: prod
+    template:
+        metadata:
+            labels:
+                env: prod
+        spec:
+            containers:
+                - image: nginx:1.7.9
+                  name: nginx
+                  ports: 
+                      - containerPort: 80
+                        protocol: TCP

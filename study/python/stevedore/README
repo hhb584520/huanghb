@@ -1,0 +1,20 @@
+https://docs.openstack.org/stevedore/latest/reference/index.html
+
+# install and run python virtual env
+apt-get install virtualenv
+or pip install virtualenv
+cd stevedore
+virtualenv venv
+source venv/bin/activate
+
+# run example
+cd example
+pip install -e .
+or 
+python setup.py develop
+python load_as_driver.py
+python load_as_extension.py
+python load_as_extension.py --width=50
+
+# uninstall develop package
+python setup.py develop --uninstall
