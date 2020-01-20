@@ -1,0 +1,2 @@
+# For the port has been used in master and worker
+sudo kubeadm reset
