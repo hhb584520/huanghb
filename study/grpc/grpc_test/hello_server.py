@@ -15,6 +15,7 @@ class Hello(HelloWorldServiceServicer):
 
     # 这里实现我们定义的接口
     def SayHello(self, request, context):
+        print ("get %s request" % request.name) 
         return HelloReply(message='Hello, %s!' % request.name)
 
 

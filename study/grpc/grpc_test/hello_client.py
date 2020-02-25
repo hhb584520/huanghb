@@ -5,7 +5,7 @@ from __future__ import print_function
 import logging
 
 import grpc
-from rpc_package.helloworld_pb2 import HelloRequest, HelloReply
+from rpc_package.helloworld_pb2 import HelloRequest
 from rpc_package.helloworld_pb2_grpc import HelloWorldServiceStub
 
 def run():
