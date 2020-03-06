@@ -37,3 +37,11 @@
 Microsoft Windows NT/2000、Novell的NetWare、Digital的OpenVMS和基于unix的系统都是使用访问控制列
 表的操作系统。每个操作系统实现该列表的方式不同。
 用在网络领域就是控制机器之间网络网络流向，即接受哪些机器的流量，拒绝哪些机器的流量。
+
+7. FPGA: 可编程逻辑门阵列
+
+8. TEM: telecommunications equipment manufacturer(电信设备制造商)
+
+9. NFV：Network functions virtualization
+
+10. VNF: Virtual network functions
