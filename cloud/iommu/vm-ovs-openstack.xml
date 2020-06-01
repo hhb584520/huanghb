@@ -1,0 +1,90 @@
+<domain>
+<uuid>2fec6097-3b5a-452b-986d-1bf1ca74de92</uuid>
+<name>instance-00000002</name>
+<memory>4194304</memory>
+<vcpu>2</vcpu>
+<metadata>
+  <nova:instance xmlns:nova="http://openstack.org/xmlns/libvirt/nova/1.0">
+  <nova:package version="21.1.0"/>
+  <nova:name>n3000vm1</nova:name>
+  <nova:creationTime>2020-05-27 12:44:21</nova:creationTime>
+  <nova:flavor name="m1.n3000ovs">
+  <nova:memory>4096</nova:memory>
+  <nova:disk>20</nova:disk>
+  <nova:swap>0</nova:swap>
+  <nova:ephemeral>0</nova:ephemeral>
+  <nova:vcpus>2</nova:vcpus>
+  </nova:flavor>
+  <nova:owner>
+  <nova:user uuid="da345de6aa7b4c9db8522aec361512fd">admin</nova:user>
+  <nova:project uuid="043094c28dc040439ba190c76c9ba8b6">admin</nova:project>
+  </nova:owner>
+  <nova:root type="image" uuid="876bc2e1-8734-4aea-8486-616b17d68dd7"/>
+  </nova:instance>
+</metadata>
+<sysinfo type="smbios">
+  <system>
+  <entry name="manufacturer">OpenStack Foundation</entry>
+  <entry name="product">OpenStack Nova</entry>
+  <entry name="version">21.1.0</entry>
+  <entry name="serial">2fec6097-3b5a-452b-986d-1bf1ca74de92</entry>
+  <entry name="uuid">2fec6097-3b5a-452b-986d-1bf1ca74de92</entry>
+  <entry name="family">Virtual Machine</entry>
+  </system>
+</sysinfo>
+<os>
+  <type machine="pc">hvm</type>
+  <boot dev="hd"/>
+  <smbios mode="sysinfo"/>
+</os>
+<features>
+  <acpi/>
+  <apic/>
+</features>
+<cputune>
+  <shares>2048</shares>
+</cputune>
+<clock offset="utc">
+  <timer name="pit" tickpolicy="delay"/>
+  <timer name="rtc" tickpolicy="catchup"/>
+  <timer name="hpet" present="no"/>
+</clock>
+<cpu match="exact">
+  <topology sockets="2" cores="1" threads="1"/>
+</cpu>
+<devices>
+  <disk type="file" device="disk">
+  <driver name="qemu" type="qcow2" cache="none"/>
+  <source file="/opt/stack/data/nova/instances/2fec6097-3b5a-452b-986d-1bf1ca74de92/disk"/>
+  <target dev="vda" bus="virtio"/>
+  </disk>
+  <interface type="bridge">
+     <mac address="fa:16:3e:d1:56:0a"/>
+     <model type="virtio"/>
+     <source bridge="br-int"/>
+     <mtu size="1500"/>
+     <target dev="tap9a7eeb2f-32"/>
+     <virtualport type="openvswitch">
+       <parameters interfaceid="9a7eeb2f-32a8-4a5b-b19a-f888db99ac5d"/>
+     </virtualport>
+  </interface>
+  <serial type="pty">
+  <log file="/opt/stack/data/nova/instances/2fec6097-3b5a-452b-986d-1bf1ca74de92/console.log" append="off"/>
+  </serial>
+  <graphics type="vnc" autoport="yes" listen="0.0.0.0"/>
+  <video>
+  <model type="cirrus"/>
+  </video>
+  <rng model="virtio">
+  <backend model="random">/dev/urandom</backend>
+  </rng>
+  <hostdev mode="subsystem" type="pci" managed="yes">
+  <source>
+  <address domain="0x0000" bus="0x2a" slot="0x0" function="0x1"/>
+  </source>
+  </hostdev>
+  <memballoon model="virtio">
+  <stats period="10"/>
+  </memballoon>
+</devices>
+</domain>
