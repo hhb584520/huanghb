@@ -1,1 +1,6 @@
-https://github.com/mechpen/sockdump
+Server:
+sudo ./userver
+
+Client:
+./uclient /home/haibin/socket
+
