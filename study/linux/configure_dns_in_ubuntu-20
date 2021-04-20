@@ -1,0 +1,56 @@
+https://notes.enovision.net/linux/changing-dns-with-resolve
+Changing DNS with systemd-resolved
+The file /etc/resolv.conf contains the following lines:
+
+# This file is managed by man:systemd-resolved(8). Do not edit.
+So when we want to change the DNS settings we are going to change the file /etc/systemd/resolved.conf
+
+#  This file is part of systemd.
+#
+#  systemd is free software; you can redistribute it and/or modify it
+#  under the terms of the GNU Lesser General Public License as published by
+#  the Free Software Foundation; either version 2.1 of the License, or
+#  (at your option) any later version.
+#
+# Entries in this file show the compile time defaults.
+# You can change settings by editing this file.
+# Defaults can be restored by simply deleting this file.
+#
+# See resolved.conf(5) for details
+
+[Resolve]
+DNS=192.168.88.22
+FallbackDNS=8.8.8.8
+Domains=yourdomain.local
+#LLMNR=no
+#MulticastDNS=no
+...etc...
+After that is done and you saved the file, you run from the command line:
+
+service systemd-resolved restart
+Now you can see the status of your changes
+
+systemd-resolve --status
+Now you should see:
+
+Global
+       LLMNR setting: no
+MulticastDNS setting: no
+  DNSOverTLS setting: no
+      DNSSEC setting: no
+    DNSSEC supported: no
+  Current DNS Server: 192.168.80.20
+         DNS Servers: 192.168.80.20
+Fallback DNS Servers: 8.8.8.8
+          DNS Domain: enovision.local
+          DNSSEC NTA: 10.in-addr.arpa
+                      16.172.in-addr.arpa
+                      168.192.in-addr.arpa
+                      ... etc ...           
+The changes are not persistent !!!
+
+Better alternative
+sudo systemd-resolve --interface wlp2s0 --set-dns 192.168.88.22 --set-domain yourdomain.local
+where wlp2s0 is the name of your (wireless) network card. You can easily check this with ifconfig
+
+To make these settings current, deactivate your network card once before reactivating it again
