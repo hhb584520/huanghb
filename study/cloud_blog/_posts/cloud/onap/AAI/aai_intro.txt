@@ -1,0 +1,2 @@
+AAI introduction: https://wiki.onap.org/pages/viewpage.action?pageId=10782086
+AAI API: https://wiki.onap.org/display/DW/AAI+API

@@ -1,0 +1,29 @@
+set nocompatible
+set number
+filetype on 
+set history=1000 
+set background=dark 
+syntax on 
+set autoindent
+set smartindent
+set tabstop=4
+set shiftwidth=4
+set showmatch
+set guioptions-=T
+set vb t_vb=
+set ruler
+set nohls
+set incsearch
+if has("vms")
+set nobackup
+else
+set backup
+endif
+
+" Tlist
+filetype plugin on
+let Tlist_Ctags_Cmd = '/usr/bin/ctags'
+let Tlist_Show_One_File = 1
+let Tlist_Exit_OnlyWindow =  1
+let Tlist_Use_Left_Window = 1
+let Tlist_Auto_Open = 1
