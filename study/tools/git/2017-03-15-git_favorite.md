@@ -171,17 +171,18 @@ git stash save "stash message"	将所有的改动放进stash中
 git diff stash	整体过一遍所有的改动，记录下每个文件的改动包含了那些内容。以备后一步的按照不同的改动内容来合并commit
 举个简单的例子，假如总共有5个改动的文件a~e，分析它们的改动内容包含了四个不同的目的I~IV，如下所示
 
-文件a --- 目的I
-文件b --- 目的II
-文件c --- 目的II, 目的III
-文件d --- 目的II, 目的IV
-文件e --- 目的III
+文件a 目的I
+文件b 目的II
+文件c 目的II, 目的III
+文件d 目的II, 目的IV
+文件e 目的III
+
 现在考虑按照不同的目的来组织不同的commit
 
-commit 1 - 目的I   - 文件a
-commit 2 - 目的II  - 文件b，文件c和文件d的一部分
-commit 3 - 目的III - 文件c的一部分，文件e
-commit 4 - 目的IV  - 文件d的一部分
+commit 1 对应 目的I   文件a
+commit 2 对应 目的II  文件b，文件c和文件d的一部分
+commit 3 对应 目的III 文件c的一部分，文件e
+commit 4 对应 目的IV  文件d的一部分
 第一个commit相对好办
 
 git checkout stash <file_a>	将stash中的文件a checkout出来，此时改动已放入index，我们可以直接commit
