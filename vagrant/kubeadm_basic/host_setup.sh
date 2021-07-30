@@ -35,8 +35,7 @@ cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
 deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 sudo apt-get update
-sudo apt-get install -y --allow-unauthenticated kubelet=1.20.0-00 kubeadm=1.20.0-00 kubectl=1.20.0-00 kubernetes-cni=0.8.7-00
-sudo sed -i '9i\Environment="KUBELET_EXTRA_ARGS=--feature-gates=DevicePlugins=true"' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+sudo apt-get install -y --allow-unauthenticated kubelet=1.21.1-00 kubeadm=1.21.1-00 kubectl=1.21.1-00 kubernetes-cni=0.8.7-00
 
 sudo modprobe ip_vs
 sudo modprobe ip_vs_rr
