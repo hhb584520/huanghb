@@ -86,10 +86,26 @@ vim /etc/networking/interfaces
 
 ### 1.4 Config DNS for ubuntu1804
 
-    $ sudo systemd-resolve --interface wlp2s0 --set-dns 192.168.88.22 --set-domain yourdomain.local
+我们可以直接停掉 systemd-resolved 服务
+
+    $ sudo systemctl stop systemd-resolved
+    $ sudo systemctl disable systemd-resolved
+    $ sudo rm /etc/resolv.conf
+    $ sudo touch /etc/resolv.conf
+    
+用NM对/etc/resolv.conf的覆盖（也有一个rc-manager选项，但是尽管在NM手册中有描述，但它不起作用）：
+
+    $ cat /etc/NetworkManager/conf.d/disableresolv.conf 
+     [main]
+      dns=none
+
+    $ sudo systemctl restart NetworkManager
+
+我们也可以 systemd-resolve 服务
+
+    $ sudo systemctl stop systemd-resolve --interface wlp2s0 --set-dns 192.168.88.22 --set-domain yourdomain.local
     $ service systemd-resolved restart
     $ systemd-resolve --status
-
 
 ## 2.修改环境变量 ##
 Ubuntu Linux系统环境变量配置文件： 
