@@ -2,3 +2,12 @@ the host is ubuntu18.04.5
 use root user
 
 cp setnet.env /run/flannel/subnet.env
+
+需要注意几个问题
+一是系统如果不干净，可以执行
+$ kubeadm reset
+
+$ netstat -nltp
+$ kill -u $pid
+生成 token
+$ kubeadm token create  --ttl=0
