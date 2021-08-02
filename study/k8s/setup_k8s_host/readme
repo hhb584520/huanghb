@@ -11,3 +11,29 @@ $ netstat -nltp
 $ kill -u $pid
 生成 token
 $ kubeadm token create  --ttl=0
+
+helm 相关东西
+https://www.howtoforge.com/ubuntu-kubernetes-helm-packages-manager/
+Install Helm
+1. Check Linux OS Version
+$ cat /etc/issue
+$ helm
+
+2. Install Helm
+It is straightforward to install the Helm, execute the following commands and it will get the installation done for you.
+
+$ clear
+$ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+$ chmod 700 get_helm.sh
+$ ./get_helm.sh
+
+
+3. Play Helm
+3.1 You can search for a Helm chart on the Internet using the following command.
+
+$ helm search hub apache
+$ clear
+
+$ helm search repo apache
+$ helm repo add stable https://charts.helm.sh/stable
+$ helm  repo list
