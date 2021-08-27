@@ -1,10 +1,11 @@
 #!/bin/bash
 
 set -ex
-
-sudo kubeadm init --apiserver-advertise-address=192.168.1.10  --service-cidr=10.96.0.0/16 --pod-network-cidr=10.244.0.0/16 --token 8c5adc.1cec8dbf339093f0
+mip=`ip a | grep 'inet' | grep '10.239' | awk '{print $ 2}' | awk -F '/' '{print $1}'`
+sed -i "s/host_ip/${mip}/" kubeadm-config.yaml
+kubeadm init --config=kubeadm-config.yaml --upload-certs | tee kubeadm-init.log
 mkdir ~/.kube
 sudo cp /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-kubectl apply -f ../weave-net.yaml
+kubectl apply -f ./kube-flannel.yaml
