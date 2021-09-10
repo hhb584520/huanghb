@@ -8,3 +8,4 @@ enabled=0
 # compile kernel
 
 https://www.tecmint.com/compile-linux-kernel-on-centos-7/
+yum config-manager --set-enabled PowerToolsyum 
