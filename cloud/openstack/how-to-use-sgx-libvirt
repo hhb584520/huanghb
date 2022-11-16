@@ -1,0 +1,5 @@
+This is a complete domain xml example.
+https://github.com/libvirt/libvirt/blob/master/tests/qemuxml2argvdata/sgx-epc.xml
+
+Please use below example for your reference.
+https://github.com/libvirt/libvirt/blame/master/docs/formatdomain.rst#L8005-L8018
